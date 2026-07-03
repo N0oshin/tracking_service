@@ -1,4 +1,4 @@
-# tracking-service — `index.js` Function Reference
+# tracking-service — Function Reference
 
 
 
@@ -70,7 +70,6 @@ Express middleware gating the customer-facing data routes. Logic:
 ### `requireApiKey(req, res, next)`
 Express middleware: if `TRACKING_API_KEY` is set, requires a matching `x-api-key` header (401 otherwise); if unset, passes through unconditionally.
 
-**Used by**: **no route currently** — defined but not attached to any endpoint (dead code carried over from the original `trackingdetail` service). `requireOtpAccess` implements the same API-key bypass inline instead, so this function has no live callers.
 
 ### `normalizeEmail(raw)`
 Trims/lowercases an email string; returns `''` unless it contains `@` and is ≤150 characters. A cheap sanity filter — the database is the real source of truth for whether the email has any associated data.
