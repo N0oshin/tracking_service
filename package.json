@@ -1,0 +1,26 @@
+{
+  "name": "tracking-service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "PostgreSQL/Supabase-compatible clone of trackingdetail (server/trackingdetail) — customer order-tracking OTP + address-change microservice.",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.8",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
