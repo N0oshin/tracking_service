@@ -425,17 +425,21 @@ function wrapConnection(client) {
 // Map a mysql2 createPool config to a pg Pool config.
 function toPgConfig(cfg = {}) {
   const out = {
-    host: cfg.host,
-    port: cfg.port,
-    user: cfg.user,
-    password: cfg.password,
-    database: cfg.database,
     max: cfg.connectionLimit || 20,
     connectionTimeoutMillis: cfg.connectTimeout || 10000,
     idleTimeoutMillis: 30000,
     // Pin every connection to UTC at startup (no extra round-trip / no query race),
     // so naive 'YYYY-MM-DD HH:MM:SS' timestamps map to the instants MySQL stored.
     options: '-c timezone=UTC',
+  }
+  if (cfg.connectionString) {
+    out.connectionString = cfg.connectionString
+  } else {
+    out.host = cfg.host
+    out.port = cfg.port
+    out.user = cfg.user
+    out.password = cfg.password
+    out.database = cfg.database
   }
   if (cfg.ssl) out.ssl = cfg.ssl
   return out

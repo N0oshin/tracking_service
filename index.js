@@ -51,6 +51,10 @@ function envInt(name, fallback) {
 
 const PORT = envInt('TRACKING_SERVICE_PORT', envInt('PORT', 5002))
 
+// Prefer DATABASE_URL (Supabase Postgres) when set, since the shared env's
+// generic DB_HOST/PORT/USER/PASS/NAME point at the legacy MySQL RDS instance
+// used by services not yet migrated to Postgres.
+const DATABASE_URL = env('DATABASE_URL', '')
 const DB_HOST = env('DB_HOST', 'localhost')
 const DB_PORT = envInt('DB_PORT', 5432)
 const DB_USER = env('DB_USER', '')
@@ -75,19 +79,27 @@ app.use(
   })
 )
 
-const pool = mysql.createPool({
-  host: DB_HOST,
-  port: DB_PORT,
-  user: DB_USER,
-  password: DB_PASS,
-  database: DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  ssl: {
-    rejectUnauthorized: false
-  }
-})
+const pool = mysql.createPool(
+  DATABASE_URL
+    ? {
+        connectionString: DATABASE_URL,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+        ssl: { rejectUnauthorized: false },
+      }
+    : {
+        host: DB_HOST,
+        port: DB_PORT,
+        user: DB_USER,
+        password: DB_PASS,
+        database: DB_NAME,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+        ssl: { rejectUnauthorized: false },
+      }
+)
 
 function nowMysqlDatetime() {
   const d = new Date()
