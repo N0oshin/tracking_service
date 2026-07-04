@@ -303,9 +303,15 @@ function translate(sql) {
   const firstWord = (leading.match(/^([A-Za-z]+)/) || [, ''])[1].toUpperCase()
   const isDdl = firstWord === 'CREATE' || firstWord === 'ALTER' || firstWord === 'DROP'
   const isInsert = firstWord === 'INSERT'
+  const isUpdate = firstWord === 'UPDATE'
+  const isDelete = firstWord === 'DELETE'
 
   if (isDdl) {
     s = translateDdl(s)
+  }
+
+  if (isUpdate || isDelete) {
+    s = s.replace(/\s+LIMIT\s+\d+\s*;?\s*$/i, '')
   }
 
   // DATE_ADD(expr, INTERVAL n unit) -> (expr + INTERVAL 'n unit')
