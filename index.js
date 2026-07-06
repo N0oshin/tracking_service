@@ -274,6 +274,15 @@ app.get('/health', async (_req, res) => {
   }
 })
 
+app.get('/api/trackingdetail/health', async (_req, res) => {
+  try {
+    await pool.query('SELECT 1')
+    res.json({ ok: true, service: 'tracking-service', db: 'connected' })
+  } catch (e) {
+    res.status(500).json({ ok: false, service: 'tracking-service', db: 'disconnected', error: e?.message || String(e) })
+  }
+})
+
 app.get('/api/trackingdetail/tracking/:trackingNumber', requireOtpAccess, async (req, res) => {
   try {
     const trackingNumber = String(req.params.trackingNumber || '').trim()
